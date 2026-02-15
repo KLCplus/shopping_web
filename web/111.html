@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音乐自动播放器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .music-player {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .album-art {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            animation: rotate 20s linear infinite;
+            animation-play-state: running;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .album-art img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .song-info {
+            margin-bottom: 25px;
+        }
+
+        .song-title {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .artist {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        .audio-info {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .status {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            display: inline-block;
+        }
+
+        .visualizer {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 100px;
+            margin: 30px 0;
+            gap: 5px;
+        }
+
+        .bar {
+            width: 8px;
+            background: linear-gradient(to top, #ff8a00, #e52e71);
+            border-radius: 4px 4px 0 0;
+            animation: pulse 1.5s ease-in-out infinite;
+            animation-delay: calc(var(--i) * 0.1s);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                height: 10px;
+            }
+            50% {
+                height: 60px;
+            }
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .note {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0;
+            animation: float 4s ease-in infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .album-art {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>沉浸式音乐体验</h1>
+    <p class="subtitle">放松心情，享受美妙的音乐时光</p>
+
+    <div class="music-player">
+        <div class="album-art">
+            <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="专辑封面">
+        </div>
+
+        <div class="song-info">
+            <h2 class="song-title">月光奏鸣曲</h2>
+            <p class="artist">贝多芬</p>
+        </div>
+
+        <div class="visualizer">
+            <div class="bar" style="--i: 0"></div>
+            <div class="bar" style="--i: 1"></div>
+            <div class="bar" style="--i: 2"></div>
+            <div class="bar" style="--i: 3"></div>
+            <div class="bar" style="--i: 4"></div>
+            <div class="bar" style="--i: 5"></div>
+            <div class="bar" style="--i: 6"></div>
+            <div class="bar" style="--i: 7"></div>
+            <div class="bar" style="--i: 8"></div>
+            <div class="bar" style="--i: 9"></div>
+        </div>
+
+        <div class="status">正在自动播放音乐...</div>
+
+        <audio id="background-music" autoplay loop>
+            <!-- 使用公开可用的音乐文件 -->
+            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+            您的浏览器不支持音频元素。
+        </audio>
+
+        <p class="audio-info">如果音乐没有自动播放，请点击页面任意位置后刷新</p>
+    </div>
+
+    <footer>
+        <p>音乐自动播放演示页面 | 使用HTML5 Audio元素</p>
+    </footer>
+</div>
+
+<script>
+    // 添加音符动画
+    function createNote() {
+        const note = document.createElement('div');
+        note.innerHTML = '♪';
+        note.classList.add('note');
+        note.style.left = Math.random() * 100 + 'vw';
+        note.style.animationDuration = (Math.random() * 3 + 3) + 's';
+        document.body.appendChild(note);
+
+        setTimeout(() => {
+            note.remove();
+        }, 4000);
+    }
+
+    // 定期创建音符
+    setInterval(createNote, 500);
+
+    // 处理音频自动播放
+    document.addEventListener('DOMContentLoaded', function() {
+        const audio = document.getElementById('background-music');
+
+        // 尝试播放音频
+        const playAudio = () => {
+            audio.play().catch(e => {
+                console.log('自动播放被阻止:', e);
+            });
+        };
+
+        // 页面加载后尝试播放
+        playAudio();
+
+        // 用户与页面交互后再次尝试播放
+        document.body.addEventListener('click', function() {
+            playAudio();
+        });
+    });
+</script>
+</body>
+</html>
